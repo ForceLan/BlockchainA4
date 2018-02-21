@@ -6,10 +6,10 @@ contract Referendum {
     // Propriétaire du contrat
     address public owner;
 
-    // Les membres (tableau adresse / appartenance aux votants)
+    // Les membres 
     mapping (address => bool) public members;
 
-    // Liste des propositions
+    // Différentes propositions
     Proposal[] proposals;
 
     // Definition de l'objet proposal
@@ -33,19 +33,20 @@ contract Referendum {
         _;
     }
 
-   // Si la proposition correspondant à cet index n'est pas ouverte au vote, la fonction n'est pas exécutée
+    // Fonction non executée si l'adresse de cette propositon n'est pas ouverte au vote.
+  
     modifier isOpen(uint index) {
         if(now > proposals[index].end) throw;
         _;
     }
     
-    // Si la proposition correspondant à cet index est fermée au vote, la fonction est exécutée
+    // la fonction est exécutée si la proposition correspondant à cet index est fermée au vote
     modifier isClosed(uint index) {
         if(now < proposals[index].end) throw;
         _;
     }
     
-    // Si le compte (msg.sender) a déjà vôté pour cette proposition, la fonction n'est pas exécutée
+    // Si déjà voté, la fonction n'est pas executée
     modifier didNotVoteYet(uint index) {
         if(proposals[index].voted[msg.sender]) throw;
         _;
@@ -57,7 +58,7 @@ contract Referendum {
         setVotingTime(votingTimeInMinutes);
     }
 
-     // Fonction de modification du temps
+     //  modification du temps
     function setVotingTime(uint newVotingTime) ownerOnly() {
         votingTimeInMinutes = newVotingTime;
     }
@@ -73,7 +74,7 @@ contract Referendum {
        
         Proposal p = proposals[proposalID];
         
-        // Donner la description
+       
         p.description = description;
         
         // Donner le moment de fin de vote
@@ -93,7 +94,7 @@ contract Referendum {
         uint dnk;
         uint[] votes = proposals[index].votes;
 
-        // On compte les pour, les contre et les "ne sait pas" (vote blanc)
+        // On compte les pour, les contre et les "do not know" (vote blanc)
         for(uint counter = 0; counter < votes.length; counter++) {
             if(votes[counter] == 0) {
                 no++;
