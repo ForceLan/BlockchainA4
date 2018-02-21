@@ -1,0 +1,13 @@
+pragma solidity ^0.4.16
+
+contract TP2{
+function add() public{
+counter++;
+}
+function substract() public{
+counter--;
+}
+function getCounter() public constant returns(uint256){
+return counter;
+}
+}
