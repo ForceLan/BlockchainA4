@@ -1,8 +1,9 @@
 pragma solidity ^0.4.15;
-// Proof of Existence contract, version 3
-contract ProofOfExistence3 {
+
+contract ProofOfExistence {
   mapping (bytes32 => bool) private proofs;
-  // store a proof of existence in the contract state
+ 
+ // store a proof of existence in the contract state
   function storeProof(bytes32 proof) {
     proofs[proof] = true;
   }
