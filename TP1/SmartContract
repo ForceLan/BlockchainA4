@@ -1,0 +1,124 @@
+pragma solidity ^0.4.0;
+contract Referendum {
+    uint public votingTimeInMinutes;
+    
+    // Propriétaire du contrat
+    address public owner;
+
+    // Les membres 
+    mapping (address => bool) public members;
+
+    // Différentes propositions
+    Proposal[] proposals;
+
+    // Definition de l'objet proposal
+    struct Proposal {
+        string description;
+        mapping (address => bool) voted;
+        uint[] votes;
+        uint end;
+        bool adopted;
+    }
+
+    // Auth propriétaire uniquement
+    modifier ownerOnly(){
+        if (msg.sender != owner) throw;
+        _;
+    }
+
+   // Auth membre uniquement
+   modifier memberOnly(){
+        if (!members[msg.sender]) throw;
+        _;
+    }
+
+    // Fonction non executée si l'adresse de cette propositon n'est pas ouverte au vote.
+  
+    modifier isOpen(uint index) {
+        if(now > proposals[index].end) throw;
+        _;
+    }
+    
+    // la fonction est exécutée si la proposition correspondant à cet index est fermée au vote
+    modifier isClosed(uint index) {
+        if(now < proposals[index].end) throw;
+        _;
+    }
+    
+    // Si déjà voté, la fonction n'est pas executée
+    modifier didNotVoteYet(uint index) {
+        if(proposals[index].voted[msg.sender]) throw;
+        _;
+    }
+
+    // Constructeur
+    function Referendum() {
+        owner = msg.sender;
+        setVotingTime(votingTimeInMinutes);
+    }
+
+     //  modification du temps
+    function setVotingTime(uint newVotingTime) ownerOnly() {
+        votingTimeInMinutes = newVotingTime;
+    }
+
+    // Ajout des membres
+    function addMember(address newMember) ownerOnly() {
+        members[newMember] = true;
+    }
+
+    // Ajouter une proposition
+    function addProposal(string description) memberOnly() {
+        uint proposalID = proposals.length++;
+       
+        Proposal p = proposals[proposalID];
+        
+       
+        p.description = description;
+        
+        // Donner le moment de fin de vote
+        p.end = now + votingTimeInMinutes * 1 minutes;
+    }
+
+    // Voter pour une proposition, 0 = no; 1 = yes; EE = do not know (blank)
+    function vote(uint index, uint vote) memberOnly() isOpen(index) didNotVoteYet(index) {
+        proposals[index].votes.push(vote);
+        proposals[index].voted[msg.sender] = true;
+    }
+
+    // Obtenir le résultat d'un vote
+    function executeProposal(uint index) isClosed(index) {
+        uint yes;
+        uint no;
+        uint dnk;
+        uint[] votes = proposals[index].votes;
+
+        // On compte les pour, les contre et les "do not know" (vote blanc)
+        for(uint counter = 0; counter < votes.length; counter++) {
+            if(votes[counter] == 0) {
+                no++;
+            }
+            if(votes[counter] == 1) {
+                yes++;
+            }
+            else {
+                dnk++;
+            }
+        }
+        if(yes > no) {
+           proposals[index].adopted = true; 
+        }
+    }
+ 
+}
+© 2018 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+API
+Training
+Shop
+Blog
