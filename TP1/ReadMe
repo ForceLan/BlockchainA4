@@ -1,18 +1,23 @@
-
 - Y-a-t-il un organisateur désigné ?
+Un "garant" est designé et soumis à une clause de confidentialité.
 
 - Qui seront les votants ?
+Les votants sont les employés d'une entreprise quelle que soit la hiérarchie.
 
 - Quelles seront les propositions ?
+Les propositions sont définie par un des utilisateurs.
 
 - Qui peut ajouter une proposition ?
+Tout les utilisateurs peuvent soumettre une proposition mais c'est le garant qui la diffuse.
 
 - Combien de temps durera le vote ?
+Le propriétaire du contrat choisit le temps défini.
 
 - Comment seront calculés les résultats ?
+Comptabilisation des votes (oui/non/blanc), oui correspond à 1, non à 0 et blanc à vide.
 
-- Peut-on faire des délégations ? 
-
-Comment ?
+- Peut-on faire des délégations ? Comment ?
+Non, si le votant ne vote pas, son avis est ignoré.
 
 - Quelles informations a-t-on sur les votants ? Comment s'assure-t-on que chacun ne vote que le nombre de fois autorisé ?
+La seul information dévoilé et l'adresse. Si l'adresse du votant à déjà voté, la fonction ne se déclenche pas.
